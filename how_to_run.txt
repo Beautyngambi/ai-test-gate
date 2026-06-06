@@ -1,0 +1,77 @@
+==========================================================
+ AI TEST GATE - HOW TO RUN
+==========================================================
+
+WHAT THIS TOOL DOES (one line)
+  Takes a Python file, uses an LLM to auto-write pytest tests for it,
+  runs them with coverage, and stops at a human approval gate before
+  the code is "accepted".
+
+----------------------------------------------------------
+STEP 1 - INSTALL THE DEPENDENCIES (one time only)
+----------------------------------------------------------
+  pip install -r requirements.txt
+
+  (This installs: openai, pytest, pytest-cov)
+
+----------------------------------------------------------
+STEP 2 - SET YOUR THREE ENVIRONMENT VARIABLES
+----------------------------------------------------------
+  The tool never stores secrets in code - it reads them from the shell.
+
+  Example using Groq:
+    export LLM_API_KEY="your-key-here"
+    export LLM_BASE_URL="https://api.groq.com/openai/v1"
+    export LLM_MODEL="llama-3.3-70b-versatile"
+
+  Example using OpenAI (leave base url unset):
+    export LLM_API_KEY="your-key-here"
+    export LLM_MODEL="gpt-4o-mini"
+
+  (A template is in the file ".env.example")
+
+----------------------------------------------------------
+STEP 3 - RUN THE TWO DEMOS
+----------------------------------------------------------
+  CLEAN code (tests should PASS  -> gate recommends APPROVE):
+    python run_gate.py --target sample_code/calculator.py
+
+  BUGGY code (a test should FAIL -> gate recommends REJECT):
+    python run_gate.py --target sample_code/calculator_buggy.py
+
+  When you see:
+    Approve this code for commit? [y/n]:
+  type  y  or  n  to record the human decision.
+
+----------------------------------------------------------
+OPTIONAL - CHANGE THE COVERAGE THRESHOLD
+----------------------------------------------------------
+  Default is 70%. To require, say, 90%:
+    python run_gate.py --target sample_code/calculator.py --threshold 90
+
+----------------------------------------------------------
+WHERE THE OUTPUT GOES
+----------------------------------------------------------
+  generated_tests/test_<name>.py   <- the tests the LLM wrote
+  results/run_log.txt              <- one summary line per run
+
+----------------------------------------------------------
+WHAT TO SCREENSHOT FOR THE REPORT
+----------------------------------------------------------
+  From BOTH runs:
+    - Coverage %
+    - X passed / Y failed
+    - The RECOMMENDATION line (APPROVE vs REJECT)
+  From the BUGGY run:
+    - The failing test name(s)
+  Also screenshot:
+    - results/run_log.txt showing both runs
+
+----------------------------------------------------------
+TROUBLESHOOTING
+----------------------------------------------------------
+  "ERROR: please set the LLM_API_KEY..."   -> you skipped Step 2.
+  "target file not found"                  -> check the --target path.
+  Buggy run shows 0 failed                 -> the LLM happened not to test
+                                              is_prime(1); just re-run it.
+==========================================================

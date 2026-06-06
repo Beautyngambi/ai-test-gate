@@ -1,0 +1,5 @@
+# Python packages this prototype needs.
+# Install them with:  pip install -r requirements.txt
+openai        # OpenAI-compatible chat client (works with OpenAI, Groq, Gemini's compatible endpoint)
+pytest        # the test runner that executes the generated tests
+pytest-cov    # adds coverage measurement (--cov) to pytest

@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Secrets — never commit the real key (only .env.example is tracked)
+.env
+
+# Runtime output (created when the tool runs)
+generated_tests/
+results/
